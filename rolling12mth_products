@@ -1,0 +1,383 @@
+
+-------this year metrics-------
+DEFINE start_wk_idnt = '201717';
+DEFINE end_wk_idnt = '201815';
+drop table customers_rolling12
+
+create table customers_rolling12  as
+select
+stre.indiv_id                                                                               as store_cust,
+paint.indiv_id                                                                            as paint,
+glitter.indiv_id                                                                          as glitter,
+const_paper.indiv_id                                                             as const_paper,
+felt.indiv_id                                                                               as felt,
+foam.indiv_id                                                                            as foam,
+scissors.indiv_id                                                                       as scissor,
+pipe_cleaner.indiv_id                                                            as pipe_cleaner,
+kids_beads.indiv_id                                                                as kids,
+cording.indiv_id                                                                        as kids_cording,
+tshirt.indiv_id                                                                            as tshirt,
+fabric_paint.indiv_id                                                              as fabric_paint,
+fabric_marker.indiv_id                                                          as fabric_marker,
+rit_dye.indiv_id                                                                        as rit_dye,
+wood.indiv_id                                                                           as wood,
+candy_melts.indiv_id                                                             as candy_melts,
+candy_molds.indiv_id                                                            as candy_molds,
+brushes.indiv_id                                                                       as brushes,
+canvas.indiv_id                                                                         as canvas,
+yarn_accessories.indiv_id                                                    as yarn_accessories,
+yarn.indiv_id                                                                              as yarn,
+paper.indiv_id                                                                           as paper,
+ink.indiv_id                                                                                as inks,
+cricut_machine.indiv_id                                                       as cricut_machine,
+stickers_embellish.indiv_id                                                as stickers_embellish,
+easels.indiv_id                                                                         as easels,
+totes.indiv_id                                                                           as totes,
+transfers.indiv_id                                                                    as transfers,
+circut_vinyl.indiv_id                                                               as circut_vinyl
+from(select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku         on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+        group by dtl.indiv_id) stre 
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  in ( '052 WATERCOLOR PAINT', '054 ACRYLIC PAINT', '056 OIL PAINT')
+        group by dtl.indiv_id) paint on stre.indiv_id = paint.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  ='030 BASIC CRAFTS' and sku.sbclass_desc = '0498 GLITTER'
+        group by dtl.indiv_id) glitter on stre.indiv_id = glitter.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and (sku.sbclass_desc  ='1673 CONSTRUCTION PAPER' or sku.sbclass_desc = '4507 CONSTRUCTION PAPER')
+        group by dtl.indiv_id) const_paper on stre.indiv_id = const_paper.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  ='030 BASIC CRAFTS' and sku.sbclass_desc = '0497 FELT'
+        group by dtl.indiv_id) felt on stre.indiv_id = felt.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  ='766 KIDS CRAFT SURFACES' and sku.sbclass_desc like '%FOAM SHEETS%'
+        group by dtl.indiv_id) foam on stre.indiv_id = foam.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  ='030 KIDS ART MATERIALS' and sku.sbclass_desc like '%SCISSORS%'
+        group by dtl.indiv_id) scissors on stre.indiv_id = scissors.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  ='030 BASIC CRAFTS' and sku.sbclass_desc ='0801 BASIC POM POMS'
+        group by dtl.indiv_id) pompoms on stre.indiv_id = pompoms.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  ='030 BASIC CRAFTS' and sku.sbclass_desc ='0509 CHENILLE PIPE CLEANE'
+        group by dtl.indiv_id) pipe_cleaner on stre.indiv_id = pipe_cleaner.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  ='765 KIDS JEWELRY' and sku.sbclass_desc ='0179 KIDS BEADS (OTHER)'
+        group by dtl.indiv_id) kids_beads on stre.indiv_id = kids_beads.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  ='765 KIDS JEWELRY' and sku.sbclass_desc ='0183 CORDING'
+        group by dtl.indiv_id) cording on stre.indiv_id = cording.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  ='023 TSHIRTS' 
+        group by dtl.indiv_id) tshirt on stre.indiv_id = tshirt.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  like '050 PAINTS %' 
+        group by dtl.indiv_id) fabric_paint on stre.indiv_id = fabric_paint.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.dept_desc  ='56 APPAREL CRAFTS' and sku.class_desc ='040 TRANSFERS'
+       group by dtl.indiv_id) transfers on stre.indiv_id = transfers.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and  sku.class_desc ='3754 FABRIC MARKERS'
+        group by dtl.indiv_id) fabric_marker on stre.indiv_id = fabric_marker.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.sku_desc like'%RIT DYE%'
+        group by dtl.indiv_id) rit_dye on stre.indiv_id = rit_dye.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc ='787 CRAFT BASICS' and sku.sbclass_desc = '9207 CORK'
+        group by dtl.indiv_id) cork on stre.indiv_id = cork.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.dept_desc ='57 UNFINISHED SURFACES' and sku.class_desc like '%WOOD%'
+        group by dtl.indiv_id) wood on stre.indiv_id = wood.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.dept_desc ='54 FOOD CRAFTING' and sku.sbclass_desc  like '%CANDY MELTS%'
+        group by dtl.indiv_id) candy_melts on stre.indiv_id = candy_melts.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.dept_desc ='54 FOOD CRAFTING' and sku.sbclass_desc  like '%CANDY MOLDS%'
+        group by dtl.indiv_id) candy_molds on stre.indiv_id = candy_molds.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and sku.class_desc  in ( '781 OIL BRUSHES', '782 ACRYLIC BRUSHES', '782 OPEN STOCK BRUSHES', '783 BRUSH SETS', '784 WATERCOLOR BRUSHES', '785 SPECIALTY BRUSHES')
+        group by dtl.indiv_id) brushes on stre.indiv_id = brushes.indiv_id        
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and  sku.class_desc  like '061 CANVAS %'
+         group by dtl.indiv_id) canvas on stre.indiv_id = canvas.indiv_id      
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) 
+               and  sku.class_desc  in ('102 YARN ACCESSORIES')
+                 group by dtl.indiv_id) yarn_accessories on stre.indiv_id = yarn_accessories.indiv_id      
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and sku.class_desc  in ('103 FASHION YARN', '104 VALUE YARNS', '105 BABY YARN', '690 LICENSED YARN', '691 CANADA YARNS')
+              group by dtl.indiv_id) yarn on stre.indiv_id = yarn.indiv_id  
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and sku.class_desc  in ('081 STAMPS')
+              group by dtl.indiv_id) stamp on stre.indiv_id = stamp.indiv_id      
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and sku.class_desc  in ('027 VALUE PAPER', '078 O/S PAPER')
+              group by dtl.indiv_id) paper on stre.indiv_id = paper.indiv_id 
+ left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and sku.class_desc  in ( '081 CRICUT')
+              and sku.sbclass_desc  in ( '1095 CRICUT MACHINES')
+              group by dtl.indiv_id) cricut_machine on stre.indiv_id = cricut_machine.indiv_id        
+ left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and sku.dept_desc  like'44 STICKERS%'
+              group by dtl.indiv_id) stickers_embellish on stre.indiv_id = stickers_embellish.indiv_id        
+ left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and sku.dept_desc like '%APPAREL CRAFTS%'
+              and sku.class_desc like '%035 SURFACES%'
+              and sku.sbclass_desc like '%TOTES%'
+              group by dtl.indiv_id) totes on stre.indiv_id = totes.indiv_id        
+ left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and sku.dept_desc like '%APPAREL CRAFTS%'
+              and sku.class_desc like '040 TRANSFERS%'
+              group by dtl.indiv_id) transfers on stre.indiv_id = transfers.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and sku.class_desc like '%321 EASELS%'
+              group by dtl.indiv_id) easels on stre.indiv_id = easels.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and (sku.sbclass_desc like '%1309 INK PADS%'
+               or sku.sbclass_desc like '%9704 INK PADS%'
+              or sku.sbclass_desc like '1239 TIM HOLTZ INKS/COLOR')
+              group by dtl.indiv_id) ink on stre.indiv_id = ink.indiv_id
+left join 
+          (select
+          dtl.indiv_id
+         from         ua_pos_trans_dtl dtl
+         inner join ua_store str on dtl.loc_key = str.loc_key
+         inner join ua_pos_prod_sku sku on dtl.sku_key = sku.sku_key
+               where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33)               
+               and sku.sbclass_desc like '4987 CRICUT VINYL'              
+              group by dtl.indiv_id) circut_vinyl on stre.indiv_id = circut_vinyl.indiv_id;        
+              
+select
+count(distinct store_cust) as store_customers,
+count(distinct paint) as paint,
+count(distinct glitter) as glitter,
+count(distinct const_paper) as const_paper,
+count(distinct felt) as felt,
+count(distinct  foam) as foam,
+count(distinct scissor) as scissor,
+count(distinct pipe_cleaner) as pipe_cleaner,
+count(distinct kids) as kids,
+count(distinct kids_cording) as kids_cording,
+count(distinct tshirt) as tshirt,
+count(distinct fabric_paint) as fabric_paint,
+count(distinct  fabric_marker) as fabric_marker,
+count(distinct rit_dye) as rit_dye,
+count(distinct wood) as wood,
+count(distinct candy_melts) as candy_melts,
+count(distinct candy_molds) as candy_molds,
+count(distinct brushes) as brushes,
+count(distinct canvas) as canvas,
+count(distinct yarn_accessories) as yarn_accssories,
+count(distinct yarn) as yarn,
+count(distinct  paper) as paper,
+count(distinct  inks) as inks,
+count(distinct  cricut_machine) as cricut_machine,
+count(distinct  stickers_embellish) as stickers_embellish,
+count(distinct  easels) as easels,
+count(distinct  totes) as totes,
+count(distinct  transfers) as transfers,
+count(distinct  circut_vinyl) as cricut_vinyl
+from customers_rolling12
+
+
+
+Kendall Scott
+Marketing Analyst – Consumer Insights 
+
+ 
+The Michaels Companies, Inc.  | 8000 Bent Branch Dr, Irving, TX 75063  |(O)  972. 409.7428 |    scottk37@michaels.com 
+ 
+Connect with Us: Facebook | Instagram | Twitter | Pinterest | YouTube | Google+
+ 
+This message and any attachments are confidential and only for addressed recipients. If you are not the intended recipient; printing, retaining, reproducing, disclosing or using any information contained is prohibited. If you received this in error, please contact the sender immediately and destroy the message and any attachments or copies (electronic or hard copy). This e-mail shall not be considered a legally binding agreement or amendment to any agreement.
+
