@@ -1,0 +1,78 @@
+--overall company by product group id'd
+select
+tm.wk_idnt,
+'TOTAL' as product_group,
+count(distinct a.indiv_id)as customers,
+sum(b.extended_sls_amt)as sales,
+count(distinct b.pos_trans_key)as transactions,
+sum(b.qty)as units,
+sum(b.grs_mrgn_amt) as gross_margin
+from acx_tlog_xref_dm a
+inner join pos_mrchnds_dtl b on a.pos_trans_key = b.pos_trans_key
+inner join prod_sku_dm c on b.sku_key=c.sku_key
+inner join time_day_dm tm on b.day_idnt=tm.day_idnt
+where tm.wk_idnt between 201501 and 201753
+and b.trans_type_key in (19,22,33)
+group by tm.wk_idnt
+
+/*halloween lemax */
+class_desc = '115 HALLOWEEN LEMAX'
+
+/*fall floral */
+grp_desc = 'FLORAL' and sbclass_desc like '%FALL%'
+
+/* fall decor */
+dept_desc = '26 HALLOWEEN & FALL'
+and (class_desc = '016 OUTDOOR DECOR'
+or  class_desc = '119 FLAGS & CLINGS'
+or  class_desc = '704 HANGING DECOR')
+
+/*halloween floral */
+
+/*halloween decor */
+
+select
+count(distinct a.indiv_id)as customers,
+sum(b.extended_sls_amt)as sales,
+count(distinct b.pos_trans_key)as transactions,
+sum(b.qty)as units,
+sum(b.grs_mrgn_amt) as gross_margin
+from acx_tlog_xref_dm a
+inner join pos_mrchnds_dtl b on a.pos_trans_key = b.pos_trans_key
+inner join prod_sku_dm c on b.sku_key=c.sku_key
+inner join time_day_dm tm on b.day_idnt=tm.day_idnt
+where c.class_desc = '115 HALLOWEEN LEMAX'
+and tm.wk_idnt between 201823 and 201828
+and b.pos_trans_key in
+(select
+b.pos_trans_key
+from acx_tlog_xref_dm a
+inner join pos_mrchnds_dtl b on a.pos_trans_key = b.pos_trans_key
+inner join prod_sku_dm c on b.sku_key=c.sku_key
+inner join time_day_dm tm on b.day_idnt=tm.day_idnt
+where dept_desc = '26 HALLOWEEN & FALL'
+and c.class_desc != '115 HALLOWEEN LEMAX'
+and tm.wk_idnt between 201823 and 201828)
+
+select
+count(distinct a.indiv_id)as customers,
+sum(b.extended_sls_amt)as sales,
+count(distinct b.pos_trans_key)as transactions,
+sum(b.qty)as units,
+sum(b.grs_mrgn_amt) as gross_margin
+from acx_tlog_xref_dm a
+inner join pos_mrchnds_dtl b on a.pos_trans_key = b.pos_trans_key
+inner join prod_sku_dm c on b.sku_key=c.sku_key
+inner join time_day_dm tm on b.day_idnt=tm.day_idnt
+where c.class_desc = '115 HALLOWEEN LEMAX'
+and tm.wk_idnt between 201823 and 201828
+and b.pos_trans_key in
+(select
+b.pos_trans_key
+from acx_tlog_xref_dm a
+inner join pos_mrchnds_dtl b on a.pos_trans_key = b.pos_trans_key
+inner join prod_sku_dm c on b.sku_key=c.sku_key
+inner join time_day_dm tm on b.day_idnt=tm.day_idnt
+where c.grp_desc like '%FLORAL%'
+and (c.sku_desc like '%FALL%' or c.sku_desc like '%HALLOWEEN%')
+and tm.wk_idnt between 201823 and 201828)
