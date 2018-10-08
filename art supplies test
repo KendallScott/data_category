@@ -1,0 +1,23 @@
+select
+count(distinct dtl.indiv_id)                                       as customers,
+count(distinct dtl.pos_trans_key)                          as trans,
+sum(dtl.extended_sls_amt)                                     as sales,
+sum(dtl.grs_mrgn_amt)                                              as gm,
+sum(dtl.qty)                                                                     as units
+from         ua_pos_trans_dtl dtl
+inner join ua_store str on dtl.loc_key = str.loc_key and str.loc_idnt!='9860' and str.loc_cntry_desc='USA'
+inner join ua_pos_prod_sku sku         on dtl.sku_key = sku.sku_key --and sku.dept_desc='70 PAINTING ART SUPPLIE'
+where dtl.wk_idnt between &start_wk_idnt and &end_wk_idnt and dtl.trans_typ_key in(19,22,33) and str.distt_idnt != '999'
+and pos_trans_key in (select pos_trans_key from art_supplies_trans);
+
+str.distt_idnt= 308
+
+select 
+distinct
+distt_key,
+distt_idnt,
+distt_desc
+from ua_store
+order by distt_idnt, distt_key asc
+
+where rownum <100
