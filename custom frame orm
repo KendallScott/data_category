@@ -102,7 +102,7 @@ inner join ua_store str on dtl.loc_key = str.loc_key
 inner join ua_pos_tm_day tm on tm.day_idnt=dtl.day_idnt
 inner join ua_pos_prod_sku sku         on dtl.sku_key = sku.sku_key
 where dtl.wk_idnt between 201801 and 201836 and dtl.trans_typ_key in(19,22,33)
-and dtl.indiv_id  in (select indiv_id from aaron_bros_oct)
+and dtl.indiv_id not  in (select indiv_id from aaron_bros_oct)
 group by tm.fiscal_mth
 order by tm.fiscal_mth;
 
