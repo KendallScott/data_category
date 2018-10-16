@@ -128,3 +128,26 @@ where cust.indiv_id not in (select indiv_id from aaron_bros_oct)
 group by cust.monthly_customer_group
 order by cust.monthly_customer_group;
 
+select * from ua_pos_tm_day where rownum< 300
+
+
+
+select 
+tm.fiscal_year,
+count(distinct indiv_id) as customers
+from last_shop_excl_sep lst
+inner join ua_pos_tm_day tm on tm.day_idnt=lst.last_shop
+where lst.indiv_id in (select indiv_id from aaron_bros_oct)
+group by tm.fiscal_year
+order by tm.fiscal_year
+
+select * from ua_individual_agg  where rownum < 100
+
+select
+tm.fiscal_year,
+count(distinct agg.indiv_id) as customers
+from  ua_individual_agg agg
+inner join ua_pos_tm_day tm on tm.day_dt=agg.last_purchase_dt
+where agg.indiv_id not  in (select indiv_id from aaron_bros_oct)
+group by tm.fiscal_year
+order by tm.fiscal_year;
